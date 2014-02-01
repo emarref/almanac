@@ -1,0 +1,46 @@
+#!/usr/bin/env php
+<?php
+
+function find_vendor_dir() {
+    $composer_configuration = json_decode(file_get_contents('composer.json'), true);
+    return isset($composer_configuration['config']['vendor-dir']) ? $composer_configuration['config']['vendor-dir'] : 'vendor';
+}
+
+$vendor_dir = find_vendor_dir();
+
+require_once sprintf('%s%sautoload.php', $vendor_dir, DIRECTORY_SEPARATOR);
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Yaml\Yaml;
+
+function register_command(ContainerBuilder $container, $name, $class)
+{
+    $container
+        ->register(sprintf('almanac.command.%s', $name), $class)
+        ->addTag('almanac.command');
+}
+
+$container = new ContainerBuilder();
+$container->setParameter('almanac.command.build.class', 'Emarref\Almanac\Command\BuildCommand');
+
+register_command($container, 'build', '%almanac.command.build.class%');
+
+// TODO find better way to get other commands tagged in this container
+$configuration_file = 'Almanac.yml';
+if (file_exists($configuration_file)) {
+    $configuration = Yaml::parse($configuration_file);
+    if (isset($configuration['commands'])) {
+        foreach ($configuration['commands'] as $command_name => $command_class) {
+            register_command($container, $command_name, $command_class);
+        }
+    }
+}
+
+$application = new Application('Almanac');
+
+foreach ($container->findTaggedServiceIds('almanac.command') as $tagged_command_name => $attributes) {
+    $application->add($container->get($tagged_command_name));
+}
+
+$application->run();

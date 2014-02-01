@@ -1,0 +1,32 @@
+{
+    "name": "emarref/almanac",
+    "description": "Almanac is a framework for generating statistics repeatedly and consistently, and producing documentation and visualisations for those statistics.",
+    "version": "0.2.2",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Malcolm Fell",
+            "email": "emarref@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/console": "~2.3",
+        "symfony/yaml": "~2.3",
+        "symfony/dependency-injection": "~2.3",
+        "doctrine/annotations": "~1.1",
+        "symfony/config": "~2.2",
+        "phpdocumentor/reflection-docblock": "~2.0.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Emarref\\Almanac": "lib"
+        }
+    },
+    "config": {
+        "bin-dir":    "bin",
+        "vendor-dir": "vendor"
+    },
+    "bin": ["bin/almanac"]
+}

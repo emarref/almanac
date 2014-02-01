@@ -1,0 +1,29 @@
+destinations:
+    my.destination.filesystem:
+        type:               filesystem
+        params:
+            output_dir:     build
+
+    my.destination.amazon-s3:
+        class:              My\Destination\AmazonS3
+        params:
+            key:            encryptedkeyhere
+
+filters:
+    my.filter.upsidedown:   My\Filter\UpsideDownFilter
+
+renderers:
+    my.renderer.ttml:      My\Renderer\TtmlRenderer
+
+sources:
+    my.source.mysql:
+        type:               mysql
+        params:
+            dsn:            mysql:host=127.0.0.1;dbname=my_database
+            username:       rswanson
+            password:       iheartbacon
+    my.source.somewhere-else:
+        class:              My\Source\SomewhereElseSource
+
+statistics:
+    my.statistic.user:      My\Statistic\UserStatistic
